@@ -25,52 +25,39 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Original Author: Lucas Jones
+// Modified to remove jQuery dep and support modular inclusion of deps by Paul Shapiro (2016)
+// Modified to add RingCT support by luigi1111 (2017)
 //
-"use strict";
+// v--- These should maybe be injected into a context and supplied to currencyConfig for future platforms
+const MyMoneroBridge_utils = require('./MyMoneroBridge_utils')
 //
-const JSBigInt = require("../cryptonote_utils/biginteger").BigInteger;
-//
-function _mixinToRingsize(mixin) {
-	return mixin + 1;
+class MyMoneroBridgeClass_Base
+{
+	constructor(this_Module)
+	{
+		this.Module = this_Module;
+	}
+	//
+	//
+	__new_cb_args_with(task_id, err_msg, res)
+	{
+		const args = 
+		{
+			task_id: task_id
+		};
+		if (typeof err_msg !== 'undefined' && err_msg) {
+			args.err_msg = err_msg; // errors must be sent back so that C++ can free heap vals container
+		} else {
+			args.res = res;
+		}
+		return args;
+	}
+	__new_task_id()
+	{
+		return Math.random().toString(36).substr(2, 9); // doesn't have to be super random
+	}
 }
 //
-function thisFork_minMixin() {
-	return 9;
-}
-function thisFork_minRingSize() {
-	return _mixinToRingsize(thisFork_minMixin());
-}
-exports.thisFork_minMixin = thisFork_minMixin;
-exports.thisFork_minRingSize = thisFork_minRingSize;
-//
-function fixedMixin() {
-	return thisFork_minMixin(); /* using the monero app default to remove MM user identifiers */
-}
-function fixedRingsize() {
-	return _mixinToRingsize(fixedMixin());
-}
-exports.fixedMixin = fixedMixin;
-exports.fixedRingsize = fixedRingsize;
-//
-//
-function default_priority() {
-	return 1;
-} // aka .low
-exports.default_priority = default_priority;
-//
-const SendFunds_ProcessStep_Code = {
-	fetchingLatestBalance: 1,
-	calculatingFee: 2,
-	fetchingDecoyOutputs: 3, // may get skipped if 0 mixin
-	constructingTransaction: 4, // may go back to .calculatingFee
-	submittingTransaction: 5,
-};
-exports.SendFunds_ProcessStep_Code = SendFunds_ProcessStep_Code;
-const SendFunds_ProcessStep_MessageSuffix = {
-	1: "Fetching latest balance.",
-	2: "Calculating fee.",
-	3: "Fetching decoy outputs.",
-	4: "Constructing transaction.", // may go back to .calculatingFee
-	5: "Submitting transaction.",
-};
-exports.SendFunds_ProcessStep_MessageSuffix = SendFunds_ProcessStep_MessageSuffix;
+module.exports = MyMoneroBridgeClass_Base

@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2018, MyMonero.com
+// Copyright (c) 2014-2019, MyMonero.com
 //
 // All rights reserved.
 //
@@ -25,30 +25,35 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// This file is here merely to share configuration
-//
-exports.bridgedFn_names =
-[
-	"is_subaddress",
-	"is_integrated_address",
-	"new_payment_id",
-	"new__int_addr_from_addr_and_short_pid",
-	"decode_address",
-	"newly_created_wallet",
-	"are_equal_mnemonics",
-	"mnemonic_from_seed",
-	"seed_and_keys_from_mnemonic",
-	"validate_components_for_login",
-	"address_and_keys_from_seed",
-	"generate_key_image",
-	"generate_key_derivation",
-	"derive_public_key",
-	"derive_subaddress_public_key",
-	"decodeRct",
-	"estimate_rct_tx_size",
-	"calculate_fee",
-	"estimated_tx_network_fee",
-	"send_step1__prepare_params_for_get_decoys",
-	"send_step2__try_create_transaction"
-];
+
+"use strict";
+const mymonero = require("../");
+const monero_config = require('../monero_utils/monero_config') 
+const assert = require('assert')
+
+describe("sendingFunds tests", function()
+{
+	it("can tell locked reason -- in 5 blocks", function()
+	{
+		const blockchain_height = 1231231
+		const tx = 
+		{
+			unlock_time: blockchain_height + 5,
+		}
+		const reason = mymonero.monero_txParsing_utils.TransactionLockedReason(tx, blockchain_height)
+		assert.equal(0, reason.indexOf("Will be unlocked in 5 blocks, ~5 minutes, Today at"))
+	});
+	it("can tell locked reason -- timestamp", function()
+	{
+		const blockchain_height = mymonero.monero_config.maxBlockNumber
+		const tx = 
+		{
+			unlock_time: blockchain_height * 10000,
+		}
+		const reason = mymonero.monero_txParsing_utils.TransactionLockedReason(tx, blockchain_height)
+		assert.equal(0, reason.indexOf("Will be unlocked in"))
+		assert.notEqual(-1, reason.indexOf("years"))
+	});
+});
+
+

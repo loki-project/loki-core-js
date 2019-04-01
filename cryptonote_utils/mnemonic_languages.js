@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2018, MyMonero.com
+// Copyright (c) 2014-2019, MyMonero.com
 //
 // All rights reserved.
 //
@@ -67,6 +67,5 @@ exports.compatible_code_from_locale = function(locale_string)
 			return short_code
 		}
 	}
-	throw "Didn't find a code"
-	// return undefined
+	return null
 }

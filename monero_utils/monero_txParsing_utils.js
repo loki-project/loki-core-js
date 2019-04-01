@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2018, MyMonero.com
+// Copyright (c) 2014-2019, MyMonero.com
 //
 // All rights reserved.
 //
@@ -29,6 +29,7 @@
 "use strict";
 //
 const monero_config = require("./monero_config");
+const moment = require("../cryptonote_utils/moment")
 //
 function IsTransactionConfirmed(tx, blockchain_height) 
 {

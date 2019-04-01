@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2018, MyMonero.com
+// Copyright (c) 2014-2019, MyMonero.com
 //
 // All rights reserved.
 //
@@ -51,8 +51,6 @@ module.exports =
 			'node_modules'
 		]
 	},
-	externals: {
-	},
 	stats: {
 		colors: true
 	},
@@ -78,7 +76,15 @@ module.exports =
 			},
 			{
 				test: /\.js$/,
-				exclude: path.join(__dirname, 'node_modules'),
+				exclude: {
+					test: [
+						path.join(__dirname, 'node_modules')
+					],
+					exclude: [
+						'monero_utils/MyMoneroCoreCpp_ASMJS.asm.js',
+						'monero_utils/MyMoneroCoreCpp_ASMJS.wasm'
+					]
+				},
 				use: [
 					{
 						loader: 'babel-loader',

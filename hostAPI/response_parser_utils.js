@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2018, MyMonero.com
+// Copyright (c) 2014-2019, MyMonero.com
 //
 // All rights reserved.
 //
@@ -39,7 +39,7 @@ function Parsed_AddressInfo__sync(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
+	coreBridge_instance,
 ) {
 	// -> returnValuesByKey
 	const total_received = new JSBigInt(data.total_received || 0);
@@ -62,7 +62,7 @@ function Parsed_AddressInfo__sync(
 			view_key__private,
 			spend_key__public,
 			spend_key__private,
-			monero_utils,
+			coreBridge_instance,
 		);
 		if (spent_output.key_image !== key_image) {
 			// console.log('💬  Output used as mixin (' + spent_output.key_image + '/' + key_image + ')')
@@ -98,7 +98,7 @@ function Parsed_AddressInfo__sync__keyImageManaged(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
+	coreBridge_instance,
 ) {
 	// -> returnValuesByKey
 	const keyImageCache = monero_keyImage_cache_utils.Lazy_KeyImageCacheForWalletWith(
@@ -111,7 +111,7 @@ function Parsed_AddressInfo__sync__keyImageManaged(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
+		coreBridge_instance,
 	);
 }
 function Parsed_AddressInfo(
@@ -121,7 +121,7 @@ function Parsed_AddressInfo(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
+	coreBridge_instance,
 	fn, // (err?, returnValuesByKey) -> Void
 ) {
 	const returnValuesByKey = Parsed_AddressInfo__sync(
@@ -131,7 +131,7 @@ function Parsed_AddressInfo(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
+		coreBridge_instance,
 	);
 	fn(null, returnValuesByKey);
 }
@@ -141,7 +141,7 @@ function Parsed_AddressInfo__keyImageManaged(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
+	coreBridge_instance,
 	fn,
 ) {
 	// -> returnValuesByKey
@@ -152,7 +152,7 @@ function Parsed_AddressInfo__keyImageManaged(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
+		coreBridge_instance,
 		fn,
 	);
 }
@@ -168,7 +168,7 @@ function Parsed_AddressTransactions(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
+	coreBridge_instance,
 	fn, // (err?, returnValuesByKey) -> Void
 ) {
 	const returnValuesByKey = Parsed_AddressTransactions__sync(
@@ -178,7 +178,7 @@ function Parsed_AddressTransactions(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
+		coreBridge_instance,
 	);
 	fn(null, returnValuesByKey);
 }
@@ -189,7 +189,7 @@ function Parsed_AddressTransactions__sync(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
+	coreBridge_instance,
 ) {
 	const account_scanned_height = data.scanned_height || 0;
 	const account_scanned_block_height = data.scanned_block_height || 0;
@@ -211,7 +211,7 @@ function Parsed_AddressTransactions__sync(
 					view_key__private,
 					spend_key__public,
 					spend_key__private,
-					monero_utils,
+					coreBridge_instance,
 				);
 				if (transactions[i].spent_outputs[j].key_image !== key_image) {
 					// console.log('Output used as mixin, ignoring (' + transactions[i].spent_outputs[j].key_image + '/' + key_image + ')')
@@ -292,7 +292,7 @@ function Parsed_AddressTransactions__sync__keyImageManaged(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
+	coreBridge_instance,
 ) {
 	const keyImageCache = monero_keyImage_cache_utils.Lazy_KeyImageCacheForWalletWith(
 		address,
@@ -304,7 +304,7 @@ function Parsed_AddressTransactions__sync__keyImageManaged(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
+		coreBridge_instance,
 	);
 }
 function Parsed_AddressTransactions__keyImageManaged(
@@ -313,7 +313,7 @@ function Parsed_AddressTransactions__keyImageManaged(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
+	coreBridge_instance,
 	fn,
 ) {
 	Parsed_AddressTransactions(
@@ -323,7 +323,7 @@ function Parsed_AddressTransactions__keyImageManaged(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
+		coreBridge_instance,
 		fn,
 	);
 }
@@ -331,180 +331,3 @@ exports.Parsed_AddressTransactions = Parsed_AddressTransactions;
 exports.Parsed_AddressTransactions__keyImageManaged = Parsed_AddressTransactions__keyImageManaged;
 exports.Parsed_AddressTransactions__sync = Parsed_AddressTransactions__sync;
 exports.Parsed_AddressTransactions__sync__keyImageManaged = Parsed_AddressTransactions__sync__keyImageManaged;
-//
-function Parsed_UnspentOuts(
-	keyImage_cache,
-	data,
-	address,
-	view_key__private,
-	spend_key__public,
-	spend_key__private,
-	monero_utils,
-	fn, // (err?, returnValuesByKey)
-) {
-	const returnValuesByKey = Parsed_UnspentOuts__sync(
-		keyImage_cache,
-		data,
-		address,
-		view_key__private,
-		spend_key__public,
-		spend_key__private,
-		monero_utils,
-	);
-	fn(null, returnValuesByKey);
-}
-function Parsed_UnspentOuts__sync(
-	keyImage_cache,
-	data,
-	address,
-	view_key__private,
-	spend_key__public,
-	spend_key__private,
-	monero_utils
-) {
-	const data_outputs = data.outputs;
-	const finalized_unspentOutputs = data.outputs || []; // to finalize:
-	for (var i = 0; i < finalized_unspentOutputs.length; i++) {
-		const unspent_output = finalized_unspentOutputs[i];
-		if (
-			unspent_output === null ||
-			typeof unspent_output === "undefined" ||
-			!unspent_output // just preserving what was in the original code
-		) {
-			throw "unspent_output at index " + i + " was null";
-		}
-		const spend_key_images = unspent_output.spend_key_images;
-		if (
-			spend_key_images === null ||
-			typeof spend_key_images === "undefined"
-		) {
-			throw "spend_key_images of unspent_output at index " +
-				i +
-				" was null";
-		}
-		for (var j = 0; j < spend_key_images.length; j++) {
-			const finalized_unspentOutput_atI_beforeSplice =
-				finalized_unspentOutputs[i];
-			if (
-				!finalized_unspentOutput_atI_beforeSplice ||
-				typeof finalized_unspentOutput_atI_beforeSplice === "undefined"
-			) {
-				// console.warn(
-				// 	`This unspent output at i ${i} was literally undefined! Skipping.`,
-				// ); // NOTE: Looks like the i-- code below should exit earlier if this is necessary
-				continue;
-			}
-			const beforeSplice__tx_pub_key =
-				finalized_unspentOutput_atI_beforeSplice.tx_pub_key;
-			const beforeSplice__index =
-				finalized_unspentOutput_atI_beforeSplice.index;
-			if (
-				typeof beforeSplice__tx_pub_key === "undefined" ||
-				!beforeSplice__tx_pub_key
-			) {
-				console.warn(
-					"This unspent out was missing a tx_pub_key! Skipping.",
-					finalized_unspentOutput_atI_beforeSplice,
-				);
-				continue;
-			}
-			var key_image = monero_keyImage_cache_utils.Lazy_KeyImage(
-				keyImage_cache,
-				beforeSplice__tx_pub_key,
-				beforeSplice__index,
-				address,
-				view_key__private,
-				spend_key__public,
-				spend_key__private,
-				monero_utils
-			);
-			if (
-				key_image ===
-				finalized_unspentOutput_atI_beforeSplice.spend_key_images[j]
-			) {
-				// console.log("💬  Output was spent; key image: " + key_image + " amount: " + monero_amount_format_utils.formatMoneyFull(finalized_unspentOutputs[i].amount));
-				// Remove output from list
-				finalized_unspentOutputs.splice(i, 1);
-				const finalized_unspentOutput_atI_afterSplice =
-					finalized_unspentOutputs[i];
-				if (finalized_unspentOutput_atI_afterSplice) {
-					j =
-						finalized_unspentOutput_atI_afterSplice.spend_key_images
-							.length;
-				}
-				i--;
-			} else {
-				// console.log(
-				// 	"💬  Output used as mixin (" +
-				// 		key_image +
-				// 		"/" +
-				// 		finalized_unspentOutputs[i].spend_key_images[j] +
-				// 		")",
-				// );
-			}
-		}
-	}
-	// console.log("Unspent outs: " + JSON.stringify(finalized_unspentOutputs));
-	var final__per_byte_fee__string;
-	if (typeof data.per_byte_fee !== 'undefined' && data.per_byte_fee) {
-		final__per_byte_fee__string = data.per_byte_fee // (is already string)
-	} else { // per_byte_fee not yet deployed - fall back to per_kb_fee
-		if (typeof data.per_kb_fee == 'undefined' || !data.per_kb_fee) {
-			throw "Expected data.per_kb_fee or data.per_byte_fee"
-		}
-		final__per_byte_fee__string = (new JSBigInt(data.per_kb_fee)).divide(1024).toString() // scale from kib to b and convert back to string
-	}
-	if (typeof final__per_byte_fee__string == 'undefined' || !final__per_byte_fee__string) {
-		throw "Unable to derive per_byte_fee string"
-	}
-	const returnValuesByKey = {
-		unspentOutputs: finalized_unspentOutputs,
-		per_byte_fee__string: final__per_byte_fee__string, // String
-	};
-	return returnValuesByKey;
-}
-function Parsed_UnspentOuts__sync__keyImageManaged(
-	data,
-	address,
-	view_key__private,
-	spend_key__public,
-	spend_key__private,
-	monero_utils,
-) {
-	const keyImageCache = monero_keyImage_cache_utils.Lazy_KeyImageCacheForWalletWith(
-		address,
-	);
-	return Parsed_UnspentOuts__sync(
-		keyImageCache,
-		data,
-		address,
-		view_key__private,
-		spend_key__public,
-		spend_key__private,
-		monero_utils,
-	);
-}
-function Parsed_UnspentOuts__keyImageManaged(
-	data,
-	address,
-	view_key__private,
-	spend_key__public,
-	spend_key__private,
-	monero_utils,
-	fn,
-) {
-	Parsed_UnspentOuts(
-		monero_keyImage_cache_utils.Lazy_KeyImageCacheForWalletWith(address),
-		data,
-		address,
-		view_key__private,
-		spend_key__public,
-		spend_key__private,
-		monero_utils,
-		fn,
-	);
-}
-exports.Parsed_UnspentOuts = Parsed_UnspentOuts;
-exports.Parsed_UnspentOuts__keyImageManaged = Parsed_UnspentOuts__keyImageManaged;
-exports.Parsed_UnspentOuts__sync = Parsed_UnspentOuts__sync;
-exports.Parsed_UnspentOuts__sync__keyImageManaged = Parsed_UnspentOuts__sync__keyImageManaged;
